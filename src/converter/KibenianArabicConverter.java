@@ -47,8 +47,23 @@ public class KibenianArabicConverter {
      *
      * @return A Kibenian value
      */
-    public String toKibenian() {
+    public String toKibenian() throws MalformedNumberException {
         // TODO Fill in the method's body
+        String numFiltered = number.replaceAll("[LXVI_]","");
+        if (numFiltered.length() > 0)
+            throw new MalformedNumberException(number);
+
+        if (number.contains("__")||number.contains("LL")||number.contains("XXXXX")||number.contains("VV")
+                ||number.contains("IIIII")||number.contains("XL")||number.contains("VL")||number.contains("IL")
+                ||number.contains("VX")||number.contains("IX")||number.contains("IV")
+                ||number.substring(0,1).equals("_")||number.substring(number.length()-1,number.length()).equals("_"))
+            throw new MalformedNumberException(number);
+
+        String[] numArray = number.split("_");
+
+
+
+
         return "I";
     }
 
