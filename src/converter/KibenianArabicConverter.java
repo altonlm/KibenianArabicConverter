@@ -2,6 +2,8 @@ package converter;
 
 import converter.exceptions.MalformedNumberException;
 import converter.exceptions.ValueOutOfBoundsException;
+import org.apache.commons.lang3.StringUtils;
+
 
 /**
  * This class implements a converter that takes a string that represents a number in either the
@@ -53,10 +55,11 @@ public class KibenianArabicConverter {
         if (numFiltered.length() > 0)
             throw new MalformedNumberException(number);
 
-        if (number.contains("__")||number.contains("LL")||number.contains("XXXXX")||number.contains("VV")
+        if (number.contains("LL")||number.contains("XXXXX")||number.contains("VV")
                 ||number.contains("IIIII")||number.contains("XL")||number.contains("VL")||number.contains("IL")
                 ||number.contains("VX")||number.contains("IX")||number.contains("IV")
-                ||number.substring(0,1).equals("_")||number.substring(number.length()-1,number.length()).equals("_"))
+                ||number.substring(0,1).equals("_")||number.substring(number.length()-1,number.length()).equals("_")
+                ||StringUtils.countMatches())
             throw new MalformedNumberException(number);
 
         String[] numArray = number.split("_");
