@@ -130,5 +130,45 @@ public class ConverterTests {
         KibenianArabicConverter converter = new KibenianArabicConverter("428959");
         converter.toKibenian();
     }
-    // TODO Add more test cases
+
+    @Test
+    public void kibenianToKibenian() throws MalformedNumberException, ValueOutOfBoundsException {
+        KibenianArabicConverter converter = new KibenianArabicConverter("LVII_XXXVII");
+        assertEquals(converter.toKibenian(), "LVII_XXXVII");
+    }
+
+    @Test(expected = MalformedNumberException.class)
+    public void kibenianToKibenianMalformed() throws MalformedNumberException, ValueOutOfBoundsException {
+        KibenianArabicConverter converter = new KibenianArabicConverter("LVII_XXVXII");
+    }
+
+    @Test(expected = MalformedNumberException.class)
+    public void arabicMalformed() throws MalformedNumberException, ValueOutOfBoundsException {
+        KibenianArabicConverter converter = new KibenianArabicConverter("12345.0");
+    }
+
+    @Test(expected = MalformedNumberException.class)
+    public void arabicMalformed2() throws MalformedNumberException, ValueOutOfBoundsException {
+        KibenianArabicConverter converter = new KibenianArabicConverter("0012345");
+    }
+
+    @Test(expected = MalformedNumberException.class)
+    public void arabicMalformed3() throws MalformedNumberException, ValueOutOfBoundsException {
+        KibenianArabicConverter converter = new KibenianArabicConverter(" 12345");
+    }
+
+    @Test(expected = MalformedNumberException.class)
+    public void arabicMalformed4() throws MalformedNumberException, ValueOutOfBoundsException {
+        KibenianArabicConverter converter = new KibenianArabicConverter("12345 ");
+    }
+
+    @Test(expected = MalformedNumberException.class)
+    public void kibenianMalformed() throws MalformedNumberException, ValueOutOfBoundsException {
+        KibenianArabicConverter converter = new KibenianArabicConverter("LVI_XV ");
+    }
+
+    @Test(expected = MalformedNumberException.class)
+    public void kibenianMalformed2() throws MalformedNumberException, ValueOutOfBoundsException {
+        KibenianArabicConverter converter = new KibenianArabicConverter(" LVI_XV");
+    }
 }
