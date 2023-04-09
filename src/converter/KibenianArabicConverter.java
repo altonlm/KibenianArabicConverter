@@ -47,7 +47,7 @@ public class KibenianArabicConverter {
 
         if (isArabic){
             int value = Integer.parseInt(number);
-            if (value < 1 || value > 428458)
+            if (value < 1 || value > 215999)
                 throw new ValueOutOfBoundsException(number);
 
             arabicValueTemp = value;
@@ -93,13 +93,21 @@ public class KibenianArabicConverter {
                 ||number.substring(0,1).equals("_")||number.substring(number.length()-1,number.length()).equals("_"))
             return false;
 
+        int numUnderscores = (number.split("_", -1).length) - 1;
+        if (numUnderscores > 2)
+            return false;
+
         return true;
     }
 
     private boolean isArabic(){
         //Check for disallowed characters
         String numFiltered = number.replaceAll("[1234567890]","");
-        if (numFiltered.length() > 0)
+        String restNumFilter = number.substring(1).replaceAll("[1234567890]","");
+        boolean allDigits = numFiltered.length() == 0;
+        boolean allButFirstDigits = restNumFilter.length() == 0;
+        boolean leadingNegative = number.substring(0, 1).equals("-");
+        if (!allDigits && (!allButFirstDigits || !leadingNegative))
             return false;
 
         //Check for leading zeros
@@ -119,9 +127,9 @@ public class KibenianArabicConverter {
         }
         String kibenianNum = "";
         for (int j = 0; j < blockValues.size()-1; j++){
-            kibenianNum += convertArabicNumberToKibenianBlock(blockValues.get(j))+"_";
+            kibenianNum += convertArabicNumberToKibenianBlock(blockValues.get(blockValues.size()-(j+1)))+"_";
         }
-        kibenianNum += convertArabicNumberToKibenianBlock(blockValues.get(blockValues.size()-1));
+        kibenianNum += convertArabicNumberToKibenianBlock(blockValues.get(0));
 
         return kibenianNum;
     }
@@ -150,22 +158,25 @@ public class KibenianArabicConverter {
         return kibenianNum;
     }
 
-    private int convertKibenianToArabic(String kibenian){
+    private int convertKibenianToArabic(String kibenian) throws MalformedNumberException {
         String[] blocks = kibenian.split("_");
         int count = 0;
 
         for (int j = 0; j < blocks.length; j++){
-            count += convertKibenianBlockToInteger(blocks[j]) * 60^j;
+            count += convertKibenianBlockToInteger(blocks[blocks.length-(j+1)]) * Math.pow(60, j);
         }
         return count;
     }
 
-    private int convertKibenianBlockToInteger(String kibenianBlock){
-        int numLs = (kibenianBlock.split("L").length) - 1;
-        int numXs = (kibenianBlock.split("X").length) - 1;
-        int numVs = (kibenianBlock.split("V").length) - 1;
-        int numIs = (kibenianBlock.split("I").length) - 1;
-        return  numLs*50 + numXs*10 + numVs*5 + numIs;
+    private int convertKibenianBlockToInteger(String kibenianBlock) throws MalformedNumberException {
+        int numLs = (kibenianBlock.split("L", -1).length) - 1;
+        int numXs = (kibenianBlock.split("X", -1).length) - 1;
+        int numVs = (kibenianBlock.split("V", -1).length) - 1;
+        int numIs = (kibenianBlock.split("I", -1).length) - 1;
+        int totalVal = numLs*50 + numXs*10 + numVs*5 + numIs;
+        if (totalVal >= 60)
+            throw new MalformedNumberException(this.number);
+        return totalVal;
     }
 
 }
